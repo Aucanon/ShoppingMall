@@ -1,9 +1,13 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
     transpileDependencies: true,
+    lintOnSave: false,
+    //代理跨域
     devServer: {
-        open: true,
-        host: 'localhost'
-    },
-    lintOnSave: false
+        proxy: {
+            "/api": {
+                target: "http://gmall-h5-api.atguigu.cn",
+            }
+        }
+    }
 })

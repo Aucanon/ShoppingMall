@@ -9,15 +9,19 @@ import Login from '@/pages/Login'
 import Register from '@/pages/Register'
 
 //重写push、replace解决编程式导航重复点击问题
-let originPush = VueRouter.prototype.push
+// let originPush = VueRouter.prototype.push
 let originReplace = VueRouter.prototype.replace
 
-VueRouter.prototype.push = function(location, resolve, reject) {
-    if (resolve && reject) {
-        originPush.call(this, location, resolve, reject)
-    } else {
-        originPush.call(this, resolve, reject, () => {}, () => {})
-    }
+// VueRouter.prototype.push = function(location, resolve, reject) {
+//     if (resolve && reject) {
+//         originPush.call(this, location, resolve, reject)
+//     } else {
+//         originPush.call(this, resolve, reject, () => {}, () => {})
+//     }
+// }
+const routerPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+    return routerPush.call(this, location).catch(error => error)
 }
 VueRouter.prototype.replace = function(location, resolve, reject) {
     if (resolve && reject) {
@@ -40,22 +44,22 @@ export default new VueRouter({
         },
         {
             name: 'search',
-            path: "/search/:keyword?",
+            path: '/search:keyword?',
             component: Search,
             meta: { show: true }
         },
         {
-            path: "/login",
+            path: '/login',
             component: Login,
             meta: { show: false }
         },
         {
-            path: "/register",
+            path: '/register',
             component: Register,
             meta: { show: false }
         },
         {
-            path: '*',
+            path: '/',
             redirect: '/home',
             meta: { show: true }
         }
