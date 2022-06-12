@@ -15,6 +15,10 @@ export default {
   components: {
     Header,
     Footer
+  },
+  mounted(){
+    //获取三级商品列表
+    this.$store.dispatch('categoryList')
   }
 }
 </script>

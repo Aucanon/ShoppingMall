@@ -50,7 +50,12 @@ export default {
     },
     methods:{
         goSearch(){
-            this.$router.push({name:'search',params:{keyword:this.keyword},query:{k:this.keyword.toUpperCase()}})
+            //合并路由query和params参数
+            let location = {name:'search',params:{keyword:this.keyword || undefined}}
+            if(this.$route.query){
+                location.query = this.$route.query
+            }
+            this.$router.push(location)
         }
     }
 }

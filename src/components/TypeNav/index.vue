@@ -1,9 +1,10 @@
 <template>
   <div class="type-nav">
     <div class="container">
-        <div @mouseleave="leaveIndex">
+        <div @mouseleave="leaveShow" @mouseenter="enterShow">
             <h2 class="all">全部商品分类</h2>
-            <div class="sort">
+            <transition name="sort">
+                <div class="sort" v-show="show">
                 <div class="all-sort-list2" @click="goSearch">
                     <div class="item" v-for="(c1,index) in categoryList" :key="c1.categoryId" :class="{cur:currentIndex == index}">
                         <h3 @mouseenter="changeIndex(index)">
@@ -26,6 +27,7 @@
                     </div>
                 </div>
             </div>
+            </transition>
         </div>
         <nav class="nav">
             <a href="###">服装城</a>
@@ -51,7 +53,9 @@ import throttle from 'lodash/throttle'
 export default {
     name:'TypeNav',
     mounted(){
-        this.$store.dispatch('categoryList')
+        if(this.$route.path != '/home'){
+            this.show = false
+        }
     },
     computed:{
         ...mapState({
@@ -60,7 +64,8 @@ export default {
     },
     data(){
         return {
-            currentIndex:-1
+            currentIndex:-1,
+            show:true
         }
     },
     methods:{
@@ -69,9 +74,6 @@ export default {
             this.currentIndex = index
         },50)
         ,
-        leaveIndex(){
-            this.currentIndex = -1
-        },
         goSearch(event){
             let element = event.target
             //解构标签 通过标签上相应的属性来区别一、二、三级标签等
@@ -90,11 +92,26 @@ export default {
                 else if(category3id){
                     query.category3Id = category3id
                 }
-                location.query = query
-                this.$router.push(location)
+                //如果路由跳转时带有params参数要携带传过去
+                if(this.$route.params){
+                    location.params = this.$route.params
+                    location.query = query
+                    this.$router.push(location)
+                }
+                
             }
             // this.$router.push('/search')
-        }
+        },
+        //鼠标移入显示商品分类列表
+        enterShow(){
+            this.show = true
+        },
+        leaveShow(){
+            this.currentIndex = -1
+            if(this.$route.path != '/home'){
+                this.show = false
+            }
+        },
     }
 }
 </script>
@@ -213,6 +230,15 @@ export default {
                     background-color: #e1251b;
                 }
             }
+        }
+        .sort-enter{
+            height: 0;
+        }
+        .sort-enter-to{
+            height: 461px;
+        }
+        .sort-enter-active{
+            transition: all .3s linear;
         }
     }
 }
