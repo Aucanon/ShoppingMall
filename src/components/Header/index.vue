@@ -57,6 +57,12 @@ export default {
             }
             this.$router.push(location)
         }
+    },
+    mounted(){
+        //通过全局事件总线清楚关键字
+        this.$bus.$on("clear",()=>{
+            this.keyword = ''
+        })
     }
 }
 </script>
