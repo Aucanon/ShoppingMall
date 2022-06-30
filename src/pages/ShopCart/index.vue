@@ -40,23 +40,23 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAllChecked">
+        <input class="chooseAll" type="checkbox" :checked="isAllChecked && cartInfoList.length > 0" @change="updataAllCartChecked($event)">
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a @click="deleteAllCheckedCart">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
       <div class="money-box">
         <div class="chosed">已选择
-          <span>0</span>件商品</div>
+          <span>{{totalNum}}</span>件商品</div>
         <div class="sumprice">
           <em>总价（不含运费） ：</em>
           <i class="summoney">{{totalPrice}}.00￥</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <router-link class="sum-btn" to="/trade">结算</router-link>
         </div>
       </div>
     </div>
@@ -114,6 +114,23 @@ import throttle from 'lodash/throttle'
         }catch(error){
           alert(error.message)
         }
+      },
+      async deleteAllCheckedCart(){
+        try{
+          await this.$store.dispatch('deleteAllCheckedCart')
+          this.getData()
+        }catch(error){
+          alert(error.message)
+        }
+      },
+      async updataAllCartChecked(event){
+        try{
+          let isChecked = event.target.checked ? "1":"0"
+          await this.$store.dispatch('updataAllCartIsChecked',isChecked)
+          this.getData()
+        }catch(error){
+          alert(error.message)
+        }
       }
     },
     computed:{
@@ -124,7 +141,18 @@ import throttle from 'lodash/throttle'
       totalPrice(){
         let sum = 0
         this.cartInfoList.forEach(item => {
-          sum += item.skuNum * item.skuPrice
+          if(item.isChecked == 1){
+            sum += item.skuNum * item.skuPrice
+          }
+        })
+        return sum
+      },
+      totalNum(){
+        let sum = 0
+        this.cartInfoList.forEach(item=>{
+          if(item.isChecked == 1){
+            sum += item.skuNum
+          }
         })
         return sum
       },

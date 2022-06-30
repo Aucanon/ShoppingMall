@@ -19,6 +19,9 @@ requests.interceptors.request.use((config) => {
             //添加一个请求头字段
             config.headers.userTempId = store.state.detail.uuid_token
         }
+        if (store.state.user.token) {
+            config.headers.token = store.state.user.token
+        }
         //进度条开始动
         nprogress.start()
         return config

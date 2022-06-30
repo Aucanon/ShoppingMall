@@ -4,6 +4,7 @@ import VueRouter from "vue-router"
 Vue.use(VueRouter)
 
 import routes from './routes'
+import store from '@/store'
 
 //重写push、replace解决编程式导航重复点击问题
 // let originPush = VueRouter.prototype.push
@@ -29,9 +30,37 @@ VueRouter.prototype.replace = function(location, resolve, reject) {
 }
 
 
-export default new VueRouter({
+let router = new VueRouter({
     routes,
     scrollBehavior(to, from, savedPosition) {
         return { y: 0 }
     }
 })
+
+router.beforeEach(async(to, from, next) => {
+    let token = store.state.user.token
+    let name = store.state.user.userInfo.name
+    if (token) {
+        if (to.path == '/login' || to.path == '/register') {
+            next('/')
+        } else {
+            if (name) {
+                next()
+            } else {
+                try {
+                    await store.dispatch('getUserInfo')
+                    next()
+                } catch (error) {
+                    //token失效
+                    store.dispatch('userLogout')
+                    next('/login')
+                }
+            }
+        }
+    } else {
+        //未登录
+        next()
+    }
+})
+
+export default router
