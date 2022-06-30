@@ -39,7 +39,7 @@
             <h4>7天无理由退货</h4>
           </li>
           <li>
-            <h3>￥{{order.orderPrice}}</h3>
+            <h3>￥{{order.orderPrice}}.00</h3>
           </li>
           <li>X{{order.skuNum}}</li>
           <li>有货</li>
@@ -83,7 +83,8 @@
       </div>
     </div>
     <div class="sub clearFix">
-      <router-link class="subBtn" to="/pay">提交订单</router-link>
+      <!-- <router-link class="subBtn" to="/pay">提交订单</router-link> -->
+      <a class="subBtn" @click="submitOrder">提交订单</a>
     </div>
   </div>
 </template>
@@ -95,7 +96,8 @@ import {mapState} from 'vuex'
     name: 'Trade',
     data(){
       return{
-        msg:''
+        msg:'',
+        orderId:''
       }
     },
     mounted(){
@@ -115,8 +117,26 @@ import {mapState} from 'vuex'
       changeDefault(address,addressInfo){
         addressInfo.forEach(item=>item.isDefault = 0)
         address.isDefault = 1
+      },
+      async submitOrder(){
+      let {tradeNo} = this.orderInfo
+      let data = {
+        consignee: this.userDefaultAddress.consignee,
+        consigneeTel: this.userDefaultAddress.phoneNum,
+        deliveryAddress: this.userDefaultAddress.fullAddress,
+        paymentWay: "ONLINE",
+        orderComment: this.msg,
+        orderDetailList: this.orderInfo.detailArrayList
+      }
+      let result = await this.$API.reqSubmitOrder(tradeNo,data)
+      if(result.code == 200){
+        this.orderId = result.data
+        this.$router.push(`/pay?orderId=${this.orderId}`)
+      }else{
+        alert(result.data)
       }
     }
+    },
   }
 </script>
 

@@ -7,18 +7,70 @@ import AddCartSuccess from '@/pages/AddCartSuccess'
 import ShopCart from '@/pages/ShopCart'
 import Trade from '@/pages/Trade'
 import Pay from '@/pages/Pay'
+import Paysuccess from '@/pages/PaySuccess'
+import Center from '@/pages/Center'
+import MyOrder from '@/pages/Center/myOrder'
+import GroupOrder from '@/pages/Center/groupOrder'
 
 export default [{
+        name: 'center',
+        path: '/center/',
+        component: Center,
+        meta: { show: true },
+        children: [{
+                name: 'myorder',
+                path: 'myorder',
+                component: MyOrder
+            },
+            {
+                name: 'grouporder',
+                path: 'grouporder',
+                component: GroupOrder
+            },
+            {
+                path: '/center',
+                redirect: '/center/myorder'
+            }
+        ]
+    },
+    {
+        name: 'paysuccess',
+        path: '/paysuccess/',
+        component: Paysuccess,
+        meta: { show: true },
+        beforeEnter: (to, from, next) => {
+            if (from.path == '/pay') {
+                next()
+            } else {
+                next(false)
+            }
+        }
+    },
+    {
         name: 'pay',
         path: '/pay/',
         component: Pay,
-        meta: { show: true }
+        meta: { show: true },
+        beforeEnter: (to, from, next) => {
+            if (from.path == '/trade') {
+                next()
+            } else {
+                next(false)
+            }
+        }
     },
     {
         name: 'trade',
         path: '/trade/',
         component: Trade,
-        meta: { show: true }
+        meta: { show: true },
+        beforeEnter: (to, from, next) => {
+            if (from.path == '/shopcart') {
+                next()
+            } else {
+                next(false)
+            }
+        }
     },
     {
         name: 'shopCart',
