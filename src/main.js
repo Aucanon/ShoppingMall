@@ -10,6 +10,7 @@ import 'swiper/css/swiper.css'
 import * as API from '@/api'
 import { MessageBox } from 'element-ui'
 import VueLazyload from 'vue-lazyload'
+import '@/plugins/validate'
 
 Vue.component(TypeNav.name, TypeNav)
 Vue.component(Carsousel.name, Carsousel)

@@ -1,31 +1,20 @@
-import Home from '@/pages/Home'
-import Search from '@/pages/Search'
-import Login from '@/pages/Login'
-import Register from '@/pages/Register'
-import Detail from '@/pages/Detail'
-import AddCartSuccess from '@/pages/AddCartSuccess'
-import ShopCart from '@/pages/ShopCart'
-import Trade from '@/pages/Trade'
-import Pay from '@/pages/Pay'
-import Paysuccess from '@/pages/PaySuccess'
-import Center from '@/pages/Center'
-import MyOrder from '@/pages/Center/myOrder'
-import GroupOrder from '@/pages/Center/groupOrder'
-
 export default [{
         name: 'center',
         path: '/center/',
-        component: Center,
+        component: () =>
+            import ('@/pages/Center'),
         meta: { show: true },
         children: [{
                 name: 'myorder',
                 path: 'myorder',
-                component: MyOrder
+                component: () =>
+                    import ('@/pages/Center/myOrder')
             },
             {
                 name: 'grouporder',
                 path: 'grouporder',
-                component: GroupOrder
+                component: () =>
+                    import ('@/pages/Center/groupOrder')
             },
             {
                 path: '/center',
@@ -36,7 +25,8 @@ export default [{
     {
         name: 'paysuccess',
         path: '/paysuccess/',
-        component: Paysuccess,
+        component: () =>
+            import ('@/pages/PaySuccess'),
         meta: { show: true },
         beforeEnter: (to, from, next) => {
             if (from.path == '/pay') {
@@ -49,7 +39,8 @@ export default [{
     {
         name: 'pay',
         path: '/pay/',
-        component: Pay,
+        component: () =>
+            import ('@/pages/Pay'),
         meta: { show: true },
         beforeEnter: (to, from, next) => {
             if (from.path == '/trade') {
@@ -62,7 +53,8 @@ export default [{
     {
         name: 'trade',
         path: '/trade/',
-        component: Trade,
+        component: () =>
+            import ('@/pages/Trade'),
         meta: { show: true },
         beforeEnter: (to, from, next) => {
             if (from.path == '/shopcart') {
@@ -75,41 +67,48 @@ export default [{
     {
         name: 'shopCart',
         path: '/shopcart/',
-        component: ShopCart,
+        component: () =>
+            import ('@/pages/ShopCart'),
         meta: { show: true }
     },
     {
         name: 'addCartSuccess',
         path: '/addcartsuccess/',
-        component: AddCartSuccess,
+        component: () =>
+            import ('@/pages/AddCartSuccess'),
         meta: { show: true }
     },
     {
         name: 'detail',
         path: '/detail/:skuid?',
-        component: Detail,
+        component: () =>
+            import ('@/pages/Detail'),
         meta: { show: true }
     },
     {
         name: 'home',
         path: "/home",
-        component: Home,
+        component: () =>
+            import ('@/pages/Home'),
         meta: { show: true }
     },
     {
         name: 'search',
         path: '/search/:keyword?',
-        component: Search,
+        component: () =>
+            import ('@/pages/Search'),
         meta: { show: true }
     },
     {
         path: '/login',
-        component: Login,
+        component: () =>
+            import ('@/pages/Login'),
         meta: { show: false }
     },
     {
         path: '/register',
-        component: Register,
+        component: () =>
+            import ('@/pages/Register'),
         meta: { show: false }
     },
     {
